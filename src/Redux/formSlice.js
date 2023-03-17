@@ -13,11 +13,15 @@ export const submitForm = createSlice({
       state.Data = state.Data.filter((item) => item.id != action.payload.id);
     },
     updateData: function (state, action) {
-       state.Data.map((item) => {
-        if (item.id === action.payload.id) {
-          item.List = action.payload.List;
-        }
-      });
+      console.log(action.payload, "action");
+      const findData =  state.Data.findIndex((item) => 
+       item.id === action.payload.id 
+        
+        
+      );
+if(findData === -1)return
+
+      state.Data[findData] = {...state.Data[findData], ...action.payload }
     },
   },
 });

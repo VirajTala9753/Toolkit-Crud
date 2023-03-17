@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { removeData, updateData } from "../../Redux/formSlice.js";
+import { removeData } from "../../Redux/formSlice.js";
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 
@@ -86,11 +86,6 @@ const Table = () => {
                     <button
                       onClick={() => {
                         navigate(`/form/${item.id}`);
-                        dispatch(
-                          updateData({
-                            id: item.id,
-                          })
-                        );
                       }}
                       className="btn btn-outline-secondary mx-2 "
                     >

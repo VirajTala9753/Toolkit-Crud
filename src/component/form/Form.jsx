@@ -4,7 +4,7 @@ import swal from "sweetalert";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { addForm } from "../../Redux/formSlice.js";
+import { addForm, updateData } from "../../Redux/formSlice.js";
 import { useNavigate, useParams } from "react-router-dom";
 import uuid from "react-uuid";
 
@@ -21,6 +21,7 @@ const initial = {
 export default function Form() {
   const dispatch = useDispatch();
   const getFormData = useSelector((state) => state.Data);
+  console.log(getFormData, "getformd");
 
   console.log("getFormData", getFormData);
 
@@ -32,16 +33,26 @@ export default function Form() {
   const [state, setState] = useState({});
   const navigate = useNavigate();
   const { id } = useParams();
-
-  const formUpdateData = useSelector((state) => state?.Data);
-
+  console.log(id, "id");
+  console.log(state, "city");
+  console.log(city, "state");
   useEffect(() => {
     if (id) {
-      const findDataById = formUpdateData.find((item) => 
-
-        item.id === id 
-      );
-  
+      const findDataById = getFormData.find((item) => item.id === id);
+      console.log(findDataById, "find");
+      setInput({
+        name: findDataById.name,
+        password: findDataById.password,
+        mail: findDataById.mail,
+        dob: findDataById.dob,
+        color: findDataById.color,
+        address: findDataById.address,
+        age: findDataById.age,
+      });
+      setFile(findDataById.file);
+      setStatus(findDataById.status);
+      setCity(findDataById.city);
+      setState(findDataById.state);
     }
   }, [id]);
 
@@ -90,6 +101,25 @@ export default function Form() {
     navigate("/");
   };
 
+  const updateForm = () => {
+    console.log("update");
+    console.log(city);
+    dispatch(
+      updateData({
+        id: id,
+        ...input,
+        state: state?.name,
+        city: city?.name,
+        file: file,
+        status: status,
+      })
+    );
+    navigate("/");
+    console.log(getFormData, "updatedone");
+  };
+  console.log(state);
+  console.log(city);
+
   return (
     <div>
       <div className="col-12 d-flex justify-content-center">
@@ -107,9 +137,7 @@ export default function Form() {
               value={input.name}
             />
             <span className="text-danger"> {errors["name"]}</span>
-
             <label for="password">Password</label>
-
             <input
               className=" m-1 form-control"
               type="password"
@@ -118,9 +146,7 @@ export default function Form() {
               onChange={(e) => changeevent(e)}
               value={input.password}
             />
-
             <span className="text-danger"> {errors["password"]}</span>
-
             <lable for="email">email </lable>
             <input
               className=" m-1 form-control"
@@ -130,7 +156,6 @@ export default function Form() {
               onChange={(e) => changeevent(e)}
               value={input.mail}
             />
-
             <span className="text-danger"> {errors["mail"]}</span>
             <lable for="state">State </lable>
             <Select
@@ -142,8 +167,7 @@ export default function Form() {
                 setState(value);
               }}
             />
-
-            <lable for="state">State </lable>
+            <lable for="state">City </lable>
             <Select
               id="city"
               name="city"
@@ -151,9 +175,7 @@ export default function Form() {
               value={city}
               onChange={(value) => setCity(value)}
             />
-
             <lable for="date">date</lable>
-
             <input
               className=" m-1 form-control"
               type="date"
@@ -163,7 +185,6 @@ export default function Form() {
               value={input.dob}
             />
             <span className="text-danger"> {errors["dob"]}</span>
-
             <label for="customRange1" className="form-label">
               Age({input.age})
             </label>
@@ -177,9 +198,7 @@ export default function Form() {
               onChange={(e) => changeevent(e)}
               value={input.age}
             ></input>
-
             <p> </p>
-
             <label for="exampleFormControlTextarea1"> Address</label>
             <textarea
               className="form-control"
@@ -190,7 +209,6 @@ export default function Form() {
               maxlength="500"
               value={input.address}
             ></textarea>
-
             <div class="mb-3">
               <label for="formFileSm" className="form-label">
                 Small file input example
@@ -204,7 +222,6 @@ export default function Form() {
               />
               {file && <img src={file} className="col-3 m-2" alt="" />}
             </div>
-
             <label for="exampleColorInput" class="form-label">
               Favourite Color
             </label>
@@ -217,7 +234,6 @@ export default function Form() {
               onChange={(e) => changeevent(e)}
               value={input.color}
             ></input>
-
             <div className="form-check form-switch ml-5">
               <label className="form-check-label" for="flexSwitchCheckChecked">
                 Status
@@ -230,16 +246,19 @@ export default function Form() {
                 onChange={(e) => setStatus(e.target.checked)}
               />
             </div>
-
-            <div>
-              <button
-                className="btn btn-success mt-3"
-                onClick={submitForm}
-                //    onClick={click}
-              >
-                submit
-              </button>
-            </div>
+            {id ? (
+              <div>
+                <button className="btn btn-success mt-3" onClick={updateForm}>
+                  update
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button className="btn btn-success mt-3" onClick={submitForm}>
+                  submit
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
